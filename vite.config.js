@@ -8,7 +8,7 @@ export default defineConfig({
             template: {
                 transformAssetUrls: {
                     base: null,
-                    includeAbsolute: false,
+                    includeAbsolute: false, // Keep this setting as needed
                 },
             },
         }),
@@ -22,8 +22,8 @@ export default defineConfig({
     ],
     resolve: {
         alias: {
-            '@': '/resources/js',
-            'vue': 'vue/dist/vue.esm-bundler.js'
+            '@': '/resources/js',  // Correct path alias
+            'vue': 'vue/dist/vue.esm-bundler.js',
         },
     },
 });

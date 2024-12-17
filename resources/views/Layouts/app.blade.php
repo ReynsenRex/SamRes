@@ -24,8 +24,12 @@
         @if (!empty($showLogout) && $showLogout)
           <div class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
             <img src="{{ $secondaryLogo }}" class="h-16" alt="Logo" style="margin-top: -10px;" />
-            <a href="{{ $logoutLink }}" type="button"
-               class="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-2xl px-4 py-2 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Logout</a>
+            <form action="/signout" method="POST">
+              @csrf
+              <button type="submit" class="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-2xl px-4 py-2 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                Logout
+              </button>
+            </form>
           </div>
         @else
           <div class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">

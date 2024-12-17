@@ -9,23 +9,12 @@ class Restaurant extends Model
 {
     use HasFactory;
 
-    // Table name (optional if it matches convention)
-    protected $table = 'restaurants';
-
-    // Fields that are mass assignable
-    protected $fillable = [
-        'name',
-        'category_id',
-        'rating',
-        'price',
-        'location',
-        'image',
-    ];
+    protected $fillable = ['name', 'category', 'rating', 'price', 'image_url'];
 
     // Define the relationship between Restaurant and Category
     public function category()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Categories::class);
     }
 
     // You can define other relationships if needed, e.g., a restaurant has many reviews

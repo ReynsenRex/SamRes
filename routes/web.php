@@ -37,9 +37,9 @@ Route::get('/pickcuisine', [HeaderController::class, 'pickcuisine']);
 
 Route::get('/loyaltypoints', [HeaderController::class, 'loyaltypoints']);
 
-Route::get('/restaurants', [RestaurantController::class, 'index'])->name('restaurants');
-Route::get('/restaurants/category/{categoryId}', [RestaurantController::class, 'showRestaurantsByCategory'])->name('restaurants.byCategory');
 
+Route::get('/pick-cuisine', [HeaderController::class, 'pickcuisine'])->name('pickcuisine');
 
+Route::get('/restaurants/category/{id}', [RestaurantController::class, 'showRestaurantsByCategory'])->name('restaurants.byCategory');
 
 require __DIR__.'/auth.php';

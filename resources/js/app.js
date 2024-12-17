@@ -5,5 +5,5 @@ import Restaurant from './Components/Restaurants.vue';
 
 // Create Vue app and mount the component
 const app = createApp({});
-app.component('restaurant-card', Restaurant);
+app.component('restaurant-list', Restaurant);
 app.mount('#app');

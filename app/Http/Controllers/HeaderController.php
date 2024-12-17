@@ -23,6 +23,13 @@ class HeaderController extends Controller
         $data['showLogout'] = false;
         return view('loyaltypoints', $data);
     }
+
+    public function history()
+    {
+        $data = $this->setDefaultViewData('History');
+        $data['showLogout'] = false;
+        return view('history', $data);
+    }
     
     public function restaurants()
     {

@@ -25,4 +25,5 @@ class Seat extends Model
       return $this->belongsToMany(Reservation::class);
   }
 
+
 }

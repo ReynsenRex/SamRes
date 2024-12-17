@@ -86,8 +86,8 @@
             for (let i = 0; i < seats.length; i++) {
                 const seat = seats[i];
                 const seatClass = seat.is_available ? 
-                    "bg-white text-gray-800 hover:bg-blue-700 hover:text-white cursor-pointer" : 
-                    "bg-red-500 text-white cursor-not-allowed"; // Change the class based on availability
+                    "bg-red-500 text-white hover:bg-blue-700 hover:text-white cursor-pointer" : 
+                    "bg-blue-700 text-white cursor-not-allowed"; // Change the class based on availability
                 
                 $("#seat-grid").append(`
                     <div data-seat-number="${seat.seat_number}"
@@ -105,7 +105,7 @@
 
         // Handle seat selection
         $("#seat-grid").on("click", ".seat", function() {
-            if ($(this).hasClass("bg-red-500")) return; // Prevent selecting unavailable seats
+            if ($(this).hasClass("bg-blue-700")) return; // Prevent selecting unavailable seats
 
             const seatNumber = $(this).data("seat-number");
 
@@ -116,7 +116,7 @@
             } else {
                 // Select the seat
                 selectedSeats.push(seatNumber);
-                $(this).removeClass("bg-white").addClass("bg-blue-700 text-white");
+                $(this).removeClass("bg-red-500").addClass("bg-blue-700 text-white");
             }
         });
 

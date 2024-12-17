@@ -15,7 +15,7 @@
         </a>
 
         {{-- History --}}
-        <a  href="{{ url('/') }}" >
+        <a  href="{{ url('/history') }}" >
         <div class="flex flex-col items-center">
           <img src="{{ asset('images/history.png') }}" alt="History" class="w-60 h-60 mb-4">
           <h2 href="{{ url('/') }}" class="text-lg font-semibold">History</h2>

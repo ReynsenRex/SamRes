@@ -51,7 +51,7 @@
         </svg>
       </button>
     </div>
-  </div>
+  </div>a
 </template>
 
 <script>
@@ -110,42 +110,43 @@ export default {
     },
 
     // Handle seat reservation
+    // In the frontend, you'll need to send both seat_number and seat_id to the backend
     reserveSeats() {
-      if (this.selectedSeats.length === 0) {
-        alert("Please select at least one seat.");
-        return;
-      }
+  if (this.selectedSeats.length === 0) {
+    alert("Please select at least one seat.");
+    return;
+  }
 
-      // Send selected seats to backend to reserve them
-      const seatNumbers = this.selectedSeats.map(seat => seat.seat_number);
-      const restaurantId = 1; // Example restaurant ID
+  // Send selected seats (by seat_number) to the backend to reserve them
+  const seatNumbers = this.selectedSeats.map(seat => seat.seat_number);  // The seat numbers (for display)
+  const restaurantId = 1; // Example restaurant ID
 
-      fetch("/seats/reserve", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
-        },
-        body: JSON.stringify({
-          restaurant_id: restaurantId,
-          seats: seatNumbers,
-        }),
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          alert("Seats reserved successfully!");
-          this.fetchSeats(); // Refresh the seat grid
-          this.selectedSeats = []; // Clear selected seats
-        } else {
-          alert("Failed to reserve seats.");
-        }
-      })
-      .catch(error => {
-        console.error("Error reserving seats:", error);
-        alert("Failed to reserve seats.");
-      });
+  fetch("/seats/reserve", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
     },
+    body: JSON.stringify({
+      restaurant_id: restaurantId,
+      seats: seatNumbers,  // Pass seat numbers
+    }),
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      alert("Seats reserved successfully!");
+      this.fetchSeats(); // Refresh the seat grid
+      this.selectedSeats = []; // Clear selected seats
+    } else {
+      alert("Failed to reserve seats.");
+    }
+  })
+  .catch(error => {
+    console.error("Error reserving seats:", error);
+    alert("Failed to reserve seats.");
+  });
+},
   },
 };
 </script>

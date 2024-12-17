@@ -54,35 +54,47 @@ class SeatController extends Controller
   }
   
   public function storeSeats(Request $request, $restaurantId)
-{
-    // Validate the request
-    $request->validate([
-        'date' => 'required|date',
-        'time' => 'required|string',
-        'seats' => 'required|array',
-        'seats.*' => 'exists:seats,id',  // Ensure selected seats exist in the database
-    ]);
-
-    // Store the reservation with selected seats
-    $reservation = Reservation::create([
-        'restaurant_id' => $restaurantId,
-        'user_id' => Auth::id(),
-        'reservation_date' => $request->date,
-        'reservation_time' => $request->time,
-    ]);
-
-    // Attach selected seats to the reservation
-    $reservation->seats()->attach($request->seats);
-
-    // Mark the selected seats as reserved
-    foreach ($request->seats as $seatId) {
-        $seat = Seat::find($seatId);
-        $seat->is_available = false;
-        $seat->save();
+  {
+    foreach ($request->seats as $index => $seatId) {
+      $seat = Seat::find($seatId);
     }
+    return $seat;
+       // Validate the request
+        $request->validate([
+          'date' => 'required|date',
+          'time' => 'required|string',
+          'seats' => 'required|array',  // Array of selected seat numbers
+          'seats.*' => 'exists:seats,seat_number',  // Ensure the seat_number exists in the seats table
+      ]);
 
-    // Redirect back with a success message
-    return redirect()->route('restaurants.index')->with('success', 'Reservation with seats successful!');
-}
+      $reservation = Reservation::create([
+          'restaurant_id' => $restaurantId,
+          'user_id' => Auth::id(),
+          'seat_id' => 1,
+          'reservation_date' => $request->date,
+          'reservation_time' => $request->time,
+      ]);
+          // Attach selected seats to the reservation
+      $seatData = [];
+      foreach ($request->seats as $index => $seatId) {
+          $seat = Seat::find($seatId);
+          $seatData[] = [
+              'seat_id' => $seat->id,  // Store seat_id
+              'seat_number' => $request->seat_numbers[$index],  // Use the seat_number passed
+              'created_at' => now(),
+              'updated_at' => now(),
+          ];
+  
+          // Mark the seat as unavailable
+          $seat->is_available = false;
+          $seat->save();
+      }
+  
+      // Attach seats to the reservation using the pivot table
+      $reservation->seats()->attach($seatData);
+  
+      // Return success message or redirect back
+      return redirect()->route('home.index')->with('success', 'Reservation with seats successful!');
+  }
 
 }

@@ -1,3 +1,4 @@
+<!-- Restaurant.vue -->
 <template>
   <div>
     <!-- Loop through categories -->

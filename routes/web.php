@@ -8,6 +8,9 @@ use App\Http\Controllers\HeaderController;
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\SeatController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\ReservationController;
+
+use App\Models\Reservation;
 use App\Models\Seat;
 
 // Route::get('/', function () {
@@ -65,6 +68,12 @@ Route::post('/restaurants/{restaurant}/reserve-seats', [RestaurantController::cl
 Route::post('/restaurants/storeReservation', [RestaurantController::class, 'storeReservation'])->name('restaurants.storeReservation');
 
 Route::get('/seats/{restaurantId}', [SeatController::class, 'getSeats']);
+
 Route::post('/seats/restore/{seatNumber}', [SeatController::class, 'restoreSeat']);
 Route::post('/seats/reserve', [SeatController::class, 'reserveSeats']);
+
+Route::get('/history', [ReservationController::class, 'history'])->name('history');
+Route::delete('/reservation/{id}/cancel', [ReservationController::class, 'cancel'])->name('reservation.cancel');
+
+
 require __DIR__ . '/auth.php';

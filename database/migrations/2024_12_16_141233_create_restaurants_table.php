@@ -14,6 +14,8 @@ return new class extends Migration {
             $table->string('price')->nullable();
             $table->string('location')->nullable();
             $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
+            $table->string('image')->nullable();
+
         });
     }
 

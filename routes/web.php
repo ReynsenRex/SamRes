@@ -7,8 +7,6 @@ use Inertia\Inertia;
 use App\Http\Controllers\HeaderController;
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\SeatController;
-use App\Models\Category;
-use App\Models\Restaurant;
 
 
 
@@ -45,4 +43,7 @@ Route::get('/restaurants/category/{id}', [RestaurantController::class, 'showRest
 
 Route::resource('/seats', SeatController::class);
 
+Route::get('/restaurants/{id}/reserve', [RestaurantController::class, 'reserve'])->name('restaurants.reserve');
+
+Route::post('/restaurants/storeReservation', [RestaurantController::class, 'storeReservation'])->name('restaurants.storeReservation');
 require __DIR__ . '/auth.php';

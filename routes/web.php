@@ -41,7 +41,11 @@ Route::get('/pick-cuisine', [HeaderController::class, 'pickcuisine'])->name('pic
 
 Route::get('/restaurants/category/{id}', [RestaurantController::class, 'showRestaurantsByCategory'])->name('restaurants.byCategory');
 
-Route::resource('/seats', SeatController::class);
+// Route to load the seat page
+Route::get('/seats', [SeatController::class, 'index'])->name('seats.index');
+// Route to fetch seat data (AJAX)
+Route::get('/seats/{restaurantId}', [SeatController::class, 'getSeats']);
+Route::post('/seats/reserve', [SeatController::class, 'reserveSeats']);
 
 Route::get('/restaurants/{id}/reserve', [RestaurantController::class, 'reserve'])->name('restaurants.reserve');
 

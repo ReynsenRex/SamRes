@@ -1,5 +1,6 @@
 import "../css/app.css";
 import "./bootstrap";
+import "jquery";
 import { createApp } from "vue";
 import Restaurant from "./Components/Restaurants.vue";
 import Seat from "./Components/Seat.vue";

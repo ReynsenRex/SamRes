@@ -9,63 +9,44 @@ use Illuminate\Http\Request;
 class SeatController extends Controller
 {
   /**
-   * Display a listing of the resource.
+   * Display the seat selection page.
    */
   public function index()
   {
+    // Set default view data
     $data = $this->setDefaultViewData('Select a seat');
     $data['showLogout'] = false;
 
-    $seats = Seat::all();
-
+    // Pass view data to the Blade template
     return view('seats.index', $data);
   }
 
   /**
-   * Show the form for creating a new resource.
+   * Fetch all seats for the specified restaurant.
    */
-  public function create()
+  public function getSeats($restaurantId)
   {
-    //
+    // Return seat data as JSON for the AJAX request
+    $seats = Seat::where('restaurant_id', $restaurantId)->get();
+    return response()->json($seats);
   }
 
   /**
-   * Store a newly created resource in storage.
+   * Reserve selected seats.
    */
-  public function store(Request $request)
+  public function reserveSeats(Request $request)
   {
-    //
-  }
+    // Validate the incoming request
+    $request->validate([
+      'restaurant_id' => 'required|integer',
+      'seats' => 'required|array',
+    ]);
 
-  /**
-   * Display the specified resource.
-   */
-  public function show(string $id)
-  {
-    //
-  }
+    // Update seat availability
+    Seat::where('restaurant_id', $request->restaurant_id)
+      ->whereIn('seat_number', $request->seats)
+      ->update(['is_available' => false]);
 
-  /**
-   * Show the form for editing the specified resource.
-   */
-  public function edit(string $id)
-  {
-    //
-  }
-
-  /**
-   * Update the specified resource in storage.
-   */
-  public function update(Request $request, string $id)
-  {
-    //
-  }
-
-  /**
-   * Remove the specified resource from storage.
-   */
-  public function destroy(string $id)
-  {
-    //
+    return response()->json(['message' => 'Seats reserved successfully']);
   }
 }

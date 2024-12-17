@@ -2,19 +2,15 @@
   <div>
     <!-- Seat Legend -->
     <div class="mb-8 flex justify-between items-center">
-      <!-- Table Notice (Left Aligned) -->
       <div class="text-white ml-4">
         <h2 class="text-lg inline-flex items-center">
-          <svg class="w-6 h-6 text-gray-800 dark:text-white mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-            width="24" height="24" fill="none" viewBox="0 0 24 24">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M10 11h2v5m-2 0h4m-2.592-8.5h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+          <svg class="w-6 h-6 text-gray-800 dark:text-white mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11h2v5m-2 0h4m-2.592-8.5h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
           </svg>
           Each table has 4 seats
         </h2>
       </div>
 
-      <!-- Legends (Centered) -->
       <div class="flex space-x-6 justify-center">
         <div class="flex items-center">
           <div class="w-[24px] h-[24px] rounded-full bg-red-500 mr-2"></div>
@@ -29,55 +25,31 @@
           <span class="text-white">Book</span>
         </div>
       </div>
-
-      <!-- Empty Spacer for Alignment -->
-      <div class="w-[150px]"></div>
     </div>
 
     <!-- Seat Table -->
-    <table class="mx-auto border-collapse border-spacing-2">
-      <tbody>
-        <tr v-for="(row, rowIndex) in rows" :key="rowIndex">
-          <td v-for="(col, colIndex) in cols" :key="colIndex" class="text-center p-2">
-            <!-- Seat Label -->
-            <div :class="getSeatClass(rowIndex, colIndex)"
-              class="w-[65px] h-[60px] mx-4 flex flex-col items-center justify-center rounded-md"
-              @click="selectSeat(rowIndex, colIndex)">
-              <h2 class="text-center">Table</h2>
-              <h2 class="text-center">{{ rowIndex * cols + colIndex + 1 }}</h2>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
-    <!-- Selected Seats Cards -->
-    <div class="mt-10 w-full">
-      <div v-if="selectedSeats.length" class="mt-6 mx-4 grid grid-cols-1 gap-6 text-left">
-        <div class="text-lg font-semibold text-white">
-          <h2>Selected Seats</h2>
-        </div>
-        <div v-for="(seat, index) in selectedSeats" :key="index"
-          class="block w-full p-4 bg-gray-800 rounded dark:bg-gray-800">
-          <h5 class="mb-2 text-lg font-semibold tracking-tight text-gray-900 dark:text-white">
-            Table {{ seat.tableNumber }}
-          </h5>
+    <div id="seat-grid" class="mb-8 grid grid-cols-5 gap-4 justify-items-center">
+      <div v-for="seat in seats" :key="seat.seat_number">
+        <div :class="getSeatClass(seat)"
+          class="w-[65px] h-[60px] mx-4 flex flex-col items-center justify-center rounded-md"
+          @click="selectSeat(seat)">
+          <h2 class="text-center">Table</h2>
+          <h2 class="text-center">{{ seat.seat_number }}</h2>
         </div>
       </div>
+    </div>
 
-      <div v-if="selectedSeats.length" class="mt-4 mb-4 mx-4 text-xl font-semibold text-gray-900">
-        <button type="button"
-          class="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium text-lg rounded-lg w-full py-2.5 text-center inline-flex justify-center items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-300"
-          @click="reserveSeats">
-          Confirm
-          <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-            viewBox="0 0 14 10">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M1 5h12m0 0L9 1m4 4L9 9" />
-          </svg>
-        </button>
-
-      </div>
+    <div v-if="selectedSeats.length" class="mt-4 mb-4 mx-4 text-xl font-semibold text-gray-900">
+      <button type="button"
+        class="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium text-lg rounded-lg w-full py-2.5 text-center inline-flex justify-center items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-300"
+        @click="reserveSeats">
+        Confirm
+        <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+          viewBox="0 0 14 10">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M1 5h12m0 0L9 1m4 4L9 9" />
+        </svg>
+      </button>
     </div>
   </div>
 </template>
@@ -86,72 +58,94 @@
 export default {
   data() {
     return {
-      rows: 5, // Number of rows
-      cols: 5, // Number of columns
-      tableNumber: 1,
-      seatStatus: [], // 2D array for seat statuses
+      seats: [], // Store the seats dynamically fetched from the backend
       selectedSeats: [], // Array to store selected seats (multiple)
-      ticketPrice: 100, // Ticket price for each seat
     };
   },
   created() {
-    // Initialize seat statuses to "available"
-    this.seatStatus = Array.from({ length: this.rows }, () =>
-      Array(this.cols).fill("available")
-    );
-  },
-  computed: {
-    // Calculate the total price for all selected seats
-    totalPrice() {
-      return this.selectedSeats.length * this.ticketPrice;
-    },
+    // Fetch seat data when the component is created
+    this.fetchSeats();
   },
   methods: {
-    getSeatClass(row, col) {
-      // Return CSS classes based on seat status
-      const status = this.seatStatus[row][col];
-      if (status === "available")
-        return "bg-white text-gray-800 hover:bg-blue-700 hover:text-white cursor-pointer";
-      if (status === "reserved")
-        return "bg-red-500 text-white cursor-not-allowed";
-      if (status === "selected")
-        return "bg-blue-700 text-white cursor-pointer";
+    // Fetch seat data from the backend
+    fetchSeats() {
+      const restaurantId = 1; // Example restaurant ID (you can pass this dynamically)
+      fetch(`/seats/${restaurantId}`)
+        .then(response => response.json())
+        .then(data => {
+          this.seats = data; // Store seat data
+        })
+        .catch(error => {
+          console.error("Error fetching seats:", error);
+        });
     },
-    selectSeat(row, col) {
-      if (this.seatStatus[row][col] === "reserved") return;
 
+    // Get CSS classes for each seat based on its availability
+    getSeatClass(seat) {
+      if (seat.status === "reserved") {
+        return "bg-red-500 text-white cursor-not-allowed";
+      } else if (seat.status === "available") {
+        return "bg-white text-gray-800 hover:bg-blue-700 hover:text-white cursor-pointer";
+      } else if (seat.status === "selected") {
+        return "bg-blue-700 text-white cursor-pointer";
+      }
+      return "";
+    },
+
+    // Handle seat selection
+    selectSeat(seat) {
+      if (seat.status === "reserved") return; // Prevent selecting reserved seats
+
+      // Toggle selection of the seat
       const seatIndex = this.selectedSeats.findIndex(
-        (seat) => seat.row === row && seat.col === col
+        (s) => s.seat_number === seat.seat_number
       );
-
-      // If the seat is already selected, deselect it
       if (seatIndex >= 0) {
-        this.selectedSeats.splice(seatIndex, 1);
-        this.seatStatus[row][col] = "available";
+        this.selectedSeats.splice(seatIndex, 1); // Deselect seat
+        seat.status = "available"; // Update seat status
       } else {
-        // Add seat with table number
-        const tableNumber = row * this.cols + col + 1; // Sequential table number
-        this.selectedSeats.push({ row, col, tableNumber });
-        this.seatStatus[row][col] = "selected";
+        this.selectedSeats.push(seat); // Select seat
+        seat.status = "selected"; // Update seat status
       }
     },
+
+    // Handle seat reservation
     reserveSeats() {
-      if (this.selectedSeats.length === 0) return;
+      if (this.selectedSeats.length === 0) {
+        alert("Please select at least one seat.");
+        return;
+      }
 
-      // Reserve all selected seats
-      this.selectedSeats.forEach((seat) => {
-        this.seatStatus[seat.row][seat.col] = "reserved";
+      // Send selected seats to backend to reserve them
+      const seatNumbers = this.selectedSeats.map(seat => seat.seat_number);
+      const restaurantId = 1; // Example restaurant ID
+
+      fetch("/seats/reserve", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
+        },
+        body: JSON.stringify({
+          restaurant_id: restaurantId,
+          seats: seatNumbers,
+        }),
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert("Seats reserved successfully!");
+          this.fetchSeats(); // Refresh the seat grid
+          this.selectedSeats = []; // Clear selected seats
+        } else {
+          alert("Failed to reserve seats.");
+        }
+      })
+      .catch(error => {
+        console.error("Error reserving seats:", error);
+        alert("Failed to reserve seats.");
       });
-
-      // Clear selected seats
-      this.selectedSeats = [];
-
-      alert("Seats reserved successfully!");
     },
   },
 };
 </script>
-
-<style>
-/* Optional custom styling */
-</style>

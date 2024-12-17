@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Seat;
+use App\Models\Reservation;
+use App\Models\Restaurant;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class SeatController extends Controller
@@ -26,9 +29,9 @@ class SeatController extends Controller
    */
   public function getSeats($restaurantId)
   {
-    // Return seat data as JSON for the AJAX request
-    $seats = Seat::where('restaurant_id', $restaurantId)->get();
-    return response()->json($seats);
+      // Fetch the seats for the specified restaurant
+      $seats = Seat::where('restaurant_id', $restaurantId)->get();
+      return response()->json($seats);
   }
 
   /**
@@ -49,4 +52,37 @@ class SeatController extends Controller
 
     return response()->json(['message' => 'Seats reserved successfully']);
   }
+  
+  public function storeSeats(Request $request, $restaurantId)
+{
+    // Validate the request
+    $request->validate([
+        'date' => 'required|date',
+        'time' => 'required|string',
+        'seats' => 'required|array',
+        'seats.*' => 'exists:seats,id',  // Ensure selected seats exist in the database
+    ]);
+
+    // Store the reservation with selected seats
+    $reservation = Reservation::create([
+        'restaurant_id' => $restaurantId,
+        'user_id' => Auth::id(),
+        'reservation_date' => $request->date,
+        'reservation_time' => $request->time,
+    ]);
+
+    // Attach selected seats to the reservation
+    $reservation->seats()->attach($request->seats);
+
+    // Mark the selected seats as reserved
+    foreach ($request->seats as $seatId) {
+        $seat = Seat::find($seatId);
+        $seat->is_available = false;
+        $seat->save();
+    }
+
+    // Redirect back with a success message
+    return redirect()->route('restaurants.index')->with('success', 'Reservation with seats successful!');
+}
+
 }

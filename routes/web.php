@@ -51,7 +51,20 @@ Route::get('/seats/{restaurantId}', [SeatController::class, 'getSeats']);
 Route::post('/seats/reserve', [SeatController::class, 'reserveSeats']);
 
 Route::get('/restaurants/{id}/reserve', [RestaurantController::class, 'reserve'])->name('restaurants.reserve');
+// Define the route to select a seat
+Route::get('/restaurants/{restaurant_id}/seats', [RestaurantController::class, 'selectSeat'])->name('seats.index');
+
+Route::get('/seats/{restaurantId}', [RestaurantController::class, 'getSeats']);
+
+Route::post('/seats/reserve', [RestaurantController::class, 'reserveSeats']);
+// Define the route to show the reservation details
+Route::get('/restaurants/reservation/{reservation_id}', [RestaurantController::class, 'showReservation'])->name('restaurants.showReservation');
+
+Route::post('/restaurants/{restaurant}/reserve-seats', [RestaurantController::class, 'storeSeats'])->name('restaurants.storeSeats');
 
 Route::post('/restaurants/storeReservation', [RestaurantController::class, 'storeReservation'])->name('restaurants.storeReservation');
 
+Route::get('/seats/{restaurantId}', [SeatController::class, 'getSeats']);
+Route::post('/seats/restore/{seatNumber}', [SeatController::class, 'restoreSeat']);
+Route::post('/seats/reserve', [SeatController::class, 'reserveSeats']);
 require __DIR__ . '/auth.php';

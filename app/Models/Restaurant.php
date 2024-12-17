@@ -28,4 +28,8 @@ class Restaurant extends Model
     {
         return asset('images/restaurants/' . $this->image);
     }
+    public function seats()
+    {
+        return $this->hasMany(Seat::class);
+    }
 }

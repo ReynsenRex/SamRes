@@ -3,41 +3,49 @@
 @section('title', 'Select Date and Time')
 
 @section('content')
-  <section class="container mx-auto p-8">
-    <!-- Heading -->
-    <div class="text-center mb-8">
-      <h1 class="text-4xl font-bold text-white mb-2">Reserve a Table at {{ $restaurant->name }}</h1>
-      <p class="text-lg text-gray-300">Please select your preferred date and time.</p>
+<section class="container mx-auto p-8">
+    <div class="text-center mb-6">
+        <h1 class="text-4xl font-bold">Reserve a Table at {{ $restaurant->name }}</h1>
+        <p class="text-lg">Please select your preferred date and time.</p>
     </div>
 
-    <!-- Reservation Form Container -->
-    <div class="flex justify-center">
-      <form action="{{ route('restaurants.storeReservation') }}" method="POST"
-            class="w-full max-w-md bg-gray-800 p-6 rounded-lg shadow-md">
+    <!-- Reservation Form -->
+    <form action="{{ route('restaurants.storeReservation') }}" method="POST">
         @csrf
-        <!-- Date Selection -->
-        <div class="mb-6">
-          <label for="date" class="block text-lg font-semibold text-white mb-2">Select Date</label>
-          <input type="date" id="date" name="date"
-                 class="w-full p-3 rounded-md bg-white text-gray-900 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                 required>
-        </div>
-        <!-- Time Selection -->
-        <div class="mb-6">
-          <label for="time" class="block text-lg font-semibold text-white mb-2">Select Time</label>
-          <input type="time" id="time" name="time"
-                 class="w-full p-3 rounded-md bg-white text-gray-900 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                 required>
-        </div>
-        <!-- Submit Button -->
-        <div class="text-center">
-          <button type="submit"
-                  class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-md transition-all duration-200">
-            Reserve Table
-          </button>
-        </div>
-      </form>
-    </div>
-  </section>
 
+        <!-- Hidden field for restaurant_id -->
+        <input type="hidden" name="restaurant_id" value="{{ $restaurant->id }}">
+
+        <!-- Date Selection -->
+        <div class="mb-4">
+            <label for="date" class="block text-lg font-semibold">Select Date</label>
+            <input
+                type="date"
+                id="date"
+                name="date"
+                class="w-full p-2 border rounded"
+                required
+                min="2024-12-19"
+                max="2024-12-20"
+            >
+        </div>
+
+        <!-- Time Selection -->
+        <div class="mb-4">
+            <label for="time" class="block text-lg font-semibold">Select Time</label>
+            <select id="time" name="time" class="w-full p-2 border rounded" required>
+                <option value="" disabled selected>Select a time</option>
+                <option value="12:30">12:30</option>
+                <option value="14:00">14:00</option>
+                <option value="15:00">15:00</option>
+                <option value="17:30">17:30</option>
+            </select>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">
+            Reserve
+        </button>
+    </form>
+</section>
 @endsection

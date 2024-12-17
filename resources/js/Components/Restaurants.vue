@@ -9,37 +9,32 @@
           :key="index"
           class="bg-black shadow-md border-black-200 rounded-lg dark:bg-black-800 dark:border-black-700"
         >
-          <div class="relative h-[350px] w-full overflow-hidden rounded-t-lg">
-            <img
-              class="rounded-t-lg w-full h-full object-cover"
-              :src="item.image"
-              alt="Restaurant Image"
-            />
-          </div>
-          <div class="p-5">
-            <a href="#">
+          <a :href="'/restaurants/' + item.id + '/reserve'">
+            <div class="relative h-[350px] w-full overflow-hidden rounded-t-lg">
+              <img
+                class="rounded-t-lg w-full h-full object-cover"
+                :src="item.image"
+                alt="Restaurant Image"
+              />
+            </div>
+            <div class="p-5">
               <h5 class="mb-2 text-xl font-bold tracking-tight text-white-900 dark:text-white">
                 {{ item.name }}
               </h5>
-            </a>
-            <p class="mb-3 text-md font-normal text-white dark:text-white">
-              {{ item.category }}
-            </p>
-            <p class="mb-3 text-sm font-normal text-white dark:text-white">
-              ⭐ {{ item.rating }}
-            </p>
-            <p class="mb-3 text-sm font-normal text-white dark:text-white">
-              {{ item.price }}
-            </p>
-            <p class="mb-3 text-sm font-normal text-white dark:text-white">
-              {{ item.location }}
-            </p>
-            <a :href="'/restaurants/' + item.id"
-              class="inline-flex justify-center w-full px-3 py-3 text-sm font-medium text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300"
-            >
-              View Details
-            </a>
-          </div>
+              <p class="mb-3 text-md font-normal text-white dark:text-white">
+                {{ item.category }}
+              </p>
+              <p class="mb-3 text-sm font-normal text-white dark:text-white">
+                ⭐ {{ item.rating }}
+              </p>
+              <p class="mb-3 text-sm font-normal text-white dark:text-white">
+                {{ item.price }}
+              </p>
+              <p class="mb-3 text-sm font-normal text-white dark:text-white">
+                {{ item.location }}
+              </p>
+            </div>
+          </a>
         </div>
       </div>
     </div>
